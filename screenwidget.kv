@@ -1,0 +1,314 @@
+#:kivy 1.9.0
+#:import math math
+
+
+
+           
+ 
+<LineCircle1@Widget>:
+    canvas:
+
+      
+        Color:
+            rgba: 51/255, 164/255, 208/255, 1
+        Line:
+            width: 2.
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1)
+        
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            width: 3.
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.3 ,0 ,(root.currentTimeAngle))
+        
+
+
+
+
+
+
+<Toggle1@ToggleButton>:
+
+    center: root.center
+    size_hint: (1,1)
+    background_color: (0.5,0.5,0.5,0.5)
+    on_release: self.startStop()
+
+
+    canvas:
+
+        Color:
+            rgba: 51/255, 164/255, 208/255, 1
+        Line:
+            width: 2.
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1)
+        
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            width: 3.
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.3 ,0 ,(root.currentTimeAngle))
+
+        Color:
+            rgba: self.tickmarckColor1
+    
+        Ellipse:           
+            id: timePoint1
+            size: 20,20
+            pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-self.setTimeAngle+90)))                    
+        
+        Color:
+            rgba: self.tickmarckColor2
+
+        Ellipse:           
+            id: timePoint2
+            size: 20,20
+            pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle2+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-self.setTimeAngle2+90)))                                                    
+        
+
+        Color:
+            id:powerLineColor
+            rgba: (root.newColor)
+        Rectangle:
+            id: powerLine
+            pos: (root.center_x, root.center_y - 45 )
+            size: (self.currentPower*50,10)
+        Color:
+            rgba: 1,1,1,1
+
+        Rectangle:
+            pos: (root.center_x, root.center_y - 45 )
+            size: (2,10)
+
+
+
+    Label: 
+        disabled: True
+        id: running
+        center:
+            (root.center_x + root.height/2 -root.height/20), ((root.center_y + root. height/2 - root.height/12))
+        text: ''
+
+    Label:
+        id: onTimePoint1
+        center: 
+            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.setTimeAngle+90)))
+        text: str(root.setTemperature)
+
+    Label:
+        id: onTimePoint2
+        center: 
+            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle2+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.setTimeAngle2+90)))
+        text: str(root.setTemperature2)
+
+
+        Label:
+            id: lapsedTime
+            center: 
+                (root.center_x+(self.width/2*root.labelOffsetX))  +((root.height/2-10)*math.cos(math.radians(-root.currentTimeAngle+90))), ((root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.currentTimeAngle+90))+(20*root.labelOffsetY)))
+            text: 'lapsed:' + str(root.lapsedTime)
+
+        Label:
+            id: currentTemp            
+            markup: True       
+            font_size: root.height/5 
+            center: root.center
+            text:'current T'
+  
+
+
+
+<Slider@Slider>:
+  
+
+<Checkbox@CheckBox>:
+            
+
+<Starter@ToggleButton>:
+    
+    id: starterToggle
+    text: self.text
+    on_release: self.toggleValue()
+
+<Edit@TButton>:
+    disabled: True
+    
+    text: 'Edit Protocol'
+    on_press: self.toggleValue()
+
+
+
+<GeneralButton@Button>:
+
+
+
+<MyPopup@Popup>:
+    auto_bring_to_front: True
+    size_hint: 1, 1
+    auto_dismiss: False
+    title: 'Edit Protocol'
+
+
+
+############
+    BoxLayout:
+        orientation: 'vertical'
+        
+        BoxLayout:
+            orientation: 'horizontal'
+#####################   CHECKBOX LIST    ##############
+            Label:
+                id: 'selected'
+                text: 'selected wells:'
+            BoxLayout:
+                orientation: 'vertical'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Checkbox
+                        id: check0
+                        active: app.root.ids.toggle0.toggled
+                    Checkbox
+                        id: check1
+                        active: app.root.ids.toggle1.toggled
+                    Checkbox
+                        id: check2
+                        active: app.root.ids.toggle2.toggled
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Checkbox
+                        id: check3
+                        active: app.root.ids.toggle3.toggled
+                    Checkbox
+                        id: check4
+                        active: app.root.ids.toggle4.toggled
+                    Checkbox
+                        id: check5
+                        active: app.root.ids.toggle5.toggled
+
+######################   TIMEPOINT CONTROLLERS ########################
+        Label:
+            text: 'Time point 1'  
+
+        BoxLayout:
+            orientation:'horizontal'        
+            Label:
+                id: timeSlider
+                text:'current time + ' + str(time.value) + 'minutes'
+            
+            Slider:
+                id: time
+                step: 5
+                range: (0,360)
+            Label:
+                id: timeofday
+                text:   str(root.displayedTimeDelta1)
+       
+        BoxLayout:
+            orientation:'horizontal'
+            Label:
+                id: temperatureSlider
+                text:'temperature: ' + str(temperature.value) + ' *C'
+            Slider
+                id: temperature
+                step:1
+                range: (5,40)
+        Label:
+            text: 'Time point 2'  
+
+        BoxLayout:
+            
+            orientation:'horizontal'     
+    
+            Label:
+                id: timeSlider2
+                text:'timepoint 1 + ' + str(time2.value) + 'minutes'
+            Slider:
+                id: time2
+                step: 5
+                range: (0,360)
+       
+        BoxLayout:
+            orientation:'horizontal'
+            Label:
+                id: temperatureSlider2
+                text:'temperature: ' + str(temperature2.value) + ' *C'
+            Slider
+                id: temperature2
+                step: 5
+                range: (5,40)
+                value: 28        
+##########################################
+        Button:
+            text: 'Submit'
+            on_press: root.closePopup()
+
+
+
+<MySecondPopup@Popup>:
+    auto_bring_to_front: True
+    size_hint: .8, .5
+    auto_dismiss: True
+    title: 'Questions?'
+    
+    Label:
+        id:secondPopUp
+        markup: True 
+        text:'We Do Not Have [b]Answers[/b] Either. Try With [b]42[/b].'
+
+
+<StarterSwitch@Switch>:
+
+
+
+<RootWidget>:
+
+    BoxLayout:
+    
+        orientation:"vertical"
+        
+
+        BoxLayout:
+            orientation: "horizontal"     
+            Toggle1 :
+                name: 'tog0'
+                id:toggle0              
+            Toggle1
+                name: 'tog1'
+                id:toggle1
+            Toggle1
+                name: 'tog2'
+                id:toggle2         
+
+        BoxLayout:
+            orientation: "horizontal"
+            Toggle1
+                name: 'tog3'
+                id:toggle3
+            Toggle1
+                name: 'tog4'
+                id:toggle4
+            Toggle1
+                name: 'tog5'
+                id:toggle5
+                
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y:0.2
+
+     
+            Starter
+                id: newStarter
+            Edit            
+                id: editToggle
+            
+            Label:
+                id:currentTimeLabel
+            GeneralButton:
+                markup: True 
+                size_hint: .2,1
+                text: '[b]?[/b]'
+                on_press: self.onQuestionAsked()
