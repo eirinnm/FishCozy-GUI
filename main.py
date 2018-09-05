@@ -23,8 +23,10 @@ from kivy.uix.switch import Switch
 
 from FishCozyHAL import FishCozyHAL
 
+import platform
 Window.size = (800, 480)
-
+if platform.system() == 'Linux':
+    Window.fullscreen = True
 
 class LineCircle(Widget):
     pass
