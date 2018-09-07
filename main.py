@@ -1,7 +1,7 @@
 
 import datetime
 import time
-
+import sys
 import kivy
 kivy.require('1.9.0')
 
@@ -22,6 +22,15 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.switch import Switch
 
 from FishCozyHAL import FishCozyHAL
+
+if len(sys.argv) < 2:
+    print("Usage: main.py serial_port\nSerial_port can be 'auto', or 'false' for a simulation")
+    sys.exit()
+port = sys.argv[1]
+if port == 'auto':
+    port = None
+if port == 'false':
+    port = False
 
 import platform
 if platform.system() == 'Linux':
@@ -356,7 +365,7 @@ class ScreenwidgetApp(App):
 
         ############## CONNECT TO BOARD ###################
 
-        self.board = FishCozyHAL.Mainboard(False)
+        self.board = FishCozyHAL.Mainboard(port=port)
         self.board.connect()
 
 
