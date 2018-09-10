@@ -1,7 +1,7 @@
-
+#!/usr/bin/env python3
 import datetime
 import time
-
+import sys
 import kivy
 kivy.require('1.9.0')
 
@@ -23,7 +23,21 @@ from kivy.uix.switch import Switch
 
 from FishCozyHAL import FishCozyHAL
 
-Window.size = (800, 480)
+if len(sys.argv) < 2:
+    print("Usage: main.py serial_port\nSerial_port can be 'auto', or 'false' for a simulation")
+    sys.exit()
+port = sys.argv[1]
+if port == 'auto':
+    port = None
+if port == 'false':
+    port = False
+
+import platform
+if platform.system() == 'Linux':
+    #Window.fullscreen = True #seems to crash now and not necessary anyway
+    pass
+else:
+    Window.size = (800, 480)
 
 
 
@@ -434,7 +448,7 @@ class ScreenwidgetApp(App):
 
         ############## CONNECT TO BOARD ###################
 
-        self.board = FishCozyHAL.Mainboard(False)
+        self.board = FishCozyHAL.Mainboard(port=port)
         self.board.connect()
 
 
