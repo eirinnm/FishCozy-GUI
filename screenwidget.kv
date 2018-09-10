@@ -5,23 +5,23 @@
 
            
  
-<LineCircle1@Widget>:
-    canvas:
+# <LineCircle1@Widget>:
+#     canvas:
 
       
-        Color:
-            rgba: 51/255, 164/255, 208/255, 1
-        Line:
-            width: 2.
-            circle:
-                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1)
+#         Color:
+#             rgba: 51/255, 164/255, 208/255, 1
+#         Line:
+#             width: 2.
+#             circle:
+#                 (self.center_x, self.center_y, min(self.height, self.height)/ 2.1)
         
-        Color:
-            rgba: 0.5, 0.5, 0.5, 1
-        Line:
-            width: 3.
-            circle:
-                (self.center_x, self.center_y, min(self.height, self.height)/ 2.3 ,0 ,(root.currentTimeAngle))
+#         Color:
+#             rgba: 0.5, 0.5, 0.5, 1
+#         Line:
+#             width: 3.
+#             circle:
+#                 (self.center_x, self.center_y, min(self.height, self.height)/ 2.3 ,0 ,(root.currentTimeAngle))
         
 
 
@@ -40,11 +40,24 @@
     canvas:
 
         Color:
+            rgba: 51/255, 164/255, 208/255, 0.2
+        Line:
+            width: 4
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1, -10,-20)
+        Color:
+            rgba: 51/255, 164/255, 208/255, 0.5
+        Line:
+            width: 4
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1,-25,-35)
+        Color:
             rgba: 51/255, 164/255, 208/255, 1
         Line:
-            width: 2.
+            width: 4
             circle:
-                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1)
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1,-40,-50)
+        
         
         Color:
             rgba: 0.5, 0.5, 0.5, 1
@@ -53,21 +66,38 @@
             circle:
                 (self.center_x, self.center_y, min(self.height, self.height)/ 2.3 ,0 ,(root.currentTimeAngle))
 
+      
         Color:
-            rgba: self.tickmarckColor1
+            rgba: 51/255, 164/255, 208/255, 1
+        Line:
+            id: timePoint1Arc
+            width: 4
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1,0,self.setTimeAngle)
+
+        
+        Color:
+            rgba: 255/255, 159/255, 54/255,1
+        Line:
+            id: timePoint2Arc
+            width: 4
+            circle:
+                (self.center_x, self.center_y, min(self.height, self.height)/ 2.1,self.setTimeAngle,310)
+
     
-        Ellipse:           
+
+        Color:
+            rgba: self.tickmarckColor1    
+        Ellipse:                     
             id: timePoint1
             size: 20,20
             pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-self.setTimeAngle+90)))                    
-        
         Color:
             rgba: self.tickmarckColor2
-
         Ellipse:           
             id: timePoint2
             size: 20,20
-            pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle2+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-self.setTimeAngle2+90)))                                                    
+            pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-310+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-310+90)))                                                    
         
 
         Color:
@@ -102,7 +132,7 @@
     Label:
         id: onTimePoint2
         center: 
-            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle2+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.setTimeAngle2+90)))
+            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-310+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-310+90)))
         text: str(root.setTemperature2)
 
 
@@ -110,7 +140,7 @@
             id: lapsedTime
             center: 
                 (root.center_x+(self.width/2*root.labelOffsetX))  +((root.height/2-10)*math.cos(math.radians(-root.currentTimeAngle+90))), ((root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.currentTimeAngle+90))+(20*root.labelOffsetY)))
-            text: 'lapsed:' + str(root.lapsedTime)
+            text: 'lapsing minutes:' + str(root.lapsedTime)
 
         Label:
             id: currentTemp            
@@ -147,6 +177,7 @@
 
 
 <MyPopup@Popup>:
+    id:myPopup
     auto_bring_to_front: True
     size_hint: 1, 1
     auto_dismiss: False
@@ -196,17 +227,51 @@
         BoxLayout:
             orientation:'horizontal'        
             Label:
-                id: timeSlider
-                text:'current time + ' + str(time.value) + 'minutes'
+                text: 'protocol starting in:' 
             
-            Slider:
-                id: time
-                step: 5
-                range: (0,360)
+            
+            # Slider:
+            #     id: time
+            #     step: 5
+            #     range: (0,360)
+            # Label:
+            #     id: timeofday
+            #     text:  'protocol starting at:'+ str(root.displayedTimeDelta1)
+
+            Label:
+                markup: True
+                text: str(root.selectedHours1) + ' hours'
+
+            BoxLayout:                          ###### INCREASE DECREASE TIME HOURS ######
+                orientation:'vertical'
+                GeneralButton
+                    size_hint : 0.2,1.5
+                    text: '+'
+                    on_press: root.increaseTimeHours()
+                GeneralButton        
+                    size_hint : 0.2,1.5
+                    text: '-'
+                    on_press: root.decreaseTimeHours()
+
+            Label:
+                text:  str(root.selectedMinutes1) +' minutes'
+            
+            BoxLayout:                          ###### INCREASE DECREASE TIME Minutes ######
+                orientation:'vertical'
+                
+                GeneralButton
+                    size_hint : 0.2,1.5
+                    text: '+'
+                    on_press: root.increaseTimeMinute()
+                GeneralButton        
+                    size_hint : 0.2,1.5
+                    text: '-'
+                    on_press: root.decreaseTimeMinute()
+
             Label:
                 id: timeofday
-                text:   str(root.displayedTimeDelta1)
-       
+                text:   'at  '+ str(root.displayedTimeDelta1)
+
         BoxLayout:
             orientation:'horizontal'
             Label:
@@ -216,20 +281,62 @@
                 id: temperature
                 step:1
                 range: (5,40)
+
+
+
+                ######### TimePoint2#############
         Label:
             text: 'Time point 2'  
 
         BoxLayout:
-            
+          
             orientation:'horizontal'     
     
+            # Label:
+            #     id: timeSlider2
+            #     text:'timepoint 1 + ' + str(time2.value) + 'minutes'
+            # Slider:
+            #     id: time2
+            #     step: 5
+            #     range: (0,360)
+
             Label:
-                id: timeSlider2
-                text:'timepoint 1 + ' + str(time2.value) + 'minutes'
-            Slider:
-                id: time2
-                step: 5
-                range: (0,360)
+                text: ' starting in T1 +' 
+            Label:
+                markup: True
+                text: str(root.selectedHours2) + ' hours'
+
+            BoxLayout:                          ###### INCREASE DECREASE TIME HOURS ######
+                orientation:'vertical'
+                GeneralButton
+                    size_hint : 0.2,1
+                    text: '+'
+                    on_press: root.increaseTimeHours2()
+                GeneralButton        
+                    size_hint : 0.2,1
+                    text: '-'
+                    on_press: root.decreaseTimeHours2()
+
+            Label:
+                text:  str(root.selectedMinutes2) +' minutes'
+            
+            BoxLayout:                          ###### INCREASE DECREASE TIME Minutes ######
+                orientation:'vertical'
+                
+                GeneralButton
+                    size_hint : 0.2,1
+                    text: '+'
+                    on_press: root.increaseTimeMinute2()
+                GeneralButton        
+                    size_hint : 0.2,1
+                    text: '-'
+                    on_press: root.decreaseTimeMinute2()
+
+            Label:
+                id: timeofday
+             #   text:   'at  '+ str(app.displayedTimeDelta1)
+
+
        
         BoxLayout:
             orientation:'horizontal'
@@ -257,7 +364,7 @@
     Label:
         id:secondPopUp
         markup: True 
-        text:'We Do Not Have [b]Answers[/b] Either. Try With [b]42[/b].'
+        text:'We Do Not Have Any [b]Answers[/b] Either. Try With [b]42[/b].'
 
 
 <StarterSwitch@Switch>:
