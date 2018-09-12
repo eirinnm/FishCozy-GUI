@@ -24,11 +24,6 @@
 #                 (self.center_x, self.center_y, min(self.height, self.height)/ 2.3 ,0 ,(root.currentTimeAngle))
         
 
-
-
-
-
-
 <Toggle1@ToggleButton>:
 
     center: root.center
@@ -88,7 +83,8 @@
 
         Color:
             rgba: self.tickmarckColor1    
-        Ellipse:                     
+        Ellipse:  
+                               
             id: timePoint1
             size: 20,20
             pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-self.setTimeAngle+90)))                    
@@ -105,15 +101,24 @@
             rgba: (root.newColor)
         Rectangle:
             id: powerLine
-            pos: (root.center_x, root.center_y - 45 )
+            pos: (root.center_x, root.center_y + root.height/10 )
             size: (self.currentPower*50,10)
         Color:
             rgba: 1,1,1,1
 
         Rectangle:
-            pos: (root.center_x, root.center_y - 45 )
+            pos: (root.center_x, root.center_y + root.height/10 )
             size: (2,10)
 
+            
+    Label:
+        id: onTimePoint2
+        disabled: True
+        markup: True
+        center: 
+            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-310+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-310+90)))
+        text:'T2'# str(root.setTemperature2)
+            
 
 
     Label: 
@@ -125,30 +130,48 @@
 
     Label:
         id: onTimePoint1
+        
+        markup: True
         center: 
             (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.setTimeAngle+90)))
-        text: str(root.setTemperature)
-
-    Label:
-        id: onTimePoint2
-        center: 
-            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-310+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-310+90)))
-        text: str(root.setTemperature2)
+        text: 'T1'#str(root.setTemperature)
+            
 
 
-        Label:
-            id: lapsedTime
-            center: 
-                (root.center_x+(self.width/2*root.labelOffsetX))  +((root.height/2-10)*math.cos(math.radians(-root.currentTimeAngle+90))), ((root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.currentTimeAngle+90))+(20*root.labelOffsetY)))
-            text: 'lapsing minutes:' + str(root.lapsedTime)
 
-        Label:
-            id: currentTemp            
-            markup: True       
-            font_size: root.height/5 
+
+        # Label:
+        #     id: lapsedTime
+        #     center: 
+        #         (root.center_x+(self.width/2*root.labelOffsetX))  +((root.height/2-10)*math.cos(math.radians(-root.currentTimeAngle+90))), ((root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.currentTimeAngle+90))+(20*root.labelOffsetY)))
+        #     text: 'lapsing minutes:' + str(root.lapsedTime)
+
+
+        RelativeLayout:
+            orientation: 'vertical'
             center: root.center
-            text:'current T'
-  
+            Label:
+                id: currentTemp            
+                markup: True       
+                font_size: root.height/5 
+                pos: 0,0
+                text:'current T'
+            Label:
+                id: labelTime1     
+                disabled:False
+                size_hint: (1,.8)       
+                markup: True       
+                font_size: root.height/15 
+                pos: 0,-root.height/10
+                text: str(root.setTemperature) + '\xb0C, in ' + str(root.lapsedTime) + 'min'
+            Label:
+                id: labelTime2            
+                disabled:False
+                size_hint: (1,.8)  
+                markup: True       
+                font_size: root.height/15 
+                pos: 0,-root.height/5
+                text: str(root.setTemperature2) + '\xb0C, in ' + str(root.lapsedTime2) + 'min'
 
 
 
@@ -188,46 +211,50 @@
 ############
     BoxLayout:
         orientation: 'vertical'
+
+
         
-        BoxLayout:
-            orientation: 'horizontal'
-#####################   CHECKBOX LIST    ##############
-            Label:
-                id: 'selected'
-                text: 'selected wells:'
-            BoxLayout:
-                orientation: 'vertical'
-                BoxLayout:
-                    orientation: 'horizontal'
-                    Checkbox
-                        id: check0
-                        active: app.root.ids.toggle0.toggled
-                    Checkbox
-                        id: check1
-                        active: app.root.ids.toggle1.toggled
-                    Checkbox
-                        id: check2
-                        active: app.root.ids.toggle2.toggled
-                BoxLayout:
-                    orientation: 'horizontal'
-                    Checkbox
-                        id: check3
-                        active: app.root.ids.toggle3.toggled
-                    Checkbox
-                        id: check4
-                        active: app.root.ids.toggle4.toggled
-                    Checkbox
-                        id: check5
-                        active: app.root.ids.toggle5.toggled
+        #####################   CHECKBOX LIST    ##############
+       # BoxLayout:
+            # orientation: 'horizontal'
+
+            # Label:
+            #     id: 'selected'
+            #     text: 'selected wells:'
+            # BoxLayout:
+            #     orientation: 'vertical'
+            #     BoxLayout:
+            #         orientation: 'horizontal'
+            #         Checkbox
+            #             id: check0
+            #             active: app.root.ids.toggle0.toggled
+            #         Checkbox
+            #             id: check1
+            #             active: app.root.ids.toggle1.toggled
+            #         Checkbox
+            #             id: check2
+            #             active: app.root.ids.toggle2.toggled
+            #     BoxLayout:
+            #         orientation: 'horizontal'
+            #         Checkbox
+            #             id: check3
+            #             active: app.root.ids.toggle3.toggled
+            #         Checkbox
+            #             id: check4
+            #             active: app.root.ids.toggle4.toggled
+            #         Checkbox
+            #             id: check5
+            #             active: app.root.ids.toggle5.toggled
 
 ######################   TIMEPOINT CONTROLLERS ########################
         Label:
+            size_hint: 1,0.5
             text: 'Time point 1'  
 
         BoxLayout:
             orientation:'horizontal'        
-            Label:
-                text: 'protocol starting in:' 
+            # Label:
+            #     text: 'starting in:' 
             
             
             # Slider:
@@ -238,37 +265,51 @@
             #     id: timeofday
             #     text:  'protocol starting at:'+ str(root.displayedTimeDelta1)
 
-            Label:
-                markup: True
-                text: str(root.selectedHours1) + ' hours'
+           
 
             BoxLayout:                          ###### INCREASE DECREASE TIME HOURS ######
-                orientation:'vertical'
+                orientation:'horizontal'
+                size_hint:2,1
+                padding: 5,10
                 GeneralButton
-                    size_hint : 0.2,1.5
+                    size_hint : 1,1
+                    text: '++'
+                    on_press: root.increaseTimeHoursFive()
+                GeneralButton
+                    size_hint : 1,1
                     text: '+'
                     on_press: root.increaseTimeHours()
+                Label:
+                    markup: True
+                    text: str(root.selectedHours1) + ' hours'
                 GeneralButton        
-                    size_hint : 0.2,1.5
+                    size_hint : 1,1
                     text: '-'
                     on_press: root.decreaseTimeHours()
+                GeneralButton        
+                    size_hint : 1,1
+                    text: '--'
+                    on_press: root.decreaseTimeHoursFive()
 
-            Label:
-                text:  str(root.selectedMinutes1) +' minutes'
+
+            
             
             BoxLayout:                          ###### INCREASE DECREASE TIME Minutes ######
-                orientation:'vertical'
-                
+                orientation:'horizontal'
+                padding: 5,10
                 GeneralButton
-                    size_hint : 0.2,1.5
+                    size_hint : 1,1
                     text: '+'
                     on_press: root.increaseTimeMinute()
+                Label:
+                    text:  str(root.selectedMinutes1) +' minutes'
                 GeneralButton        
-                    size_hint : 0.2,1.5
+                    size_hint : 1,1
                     text: '-'
                     on_press: root.decreaseTimeMinute()
 
             Label:
+                size_hint: 0.5,1
                 id: timeofday
                 text:   'at  '+ str(root.displayedTimeDelta1)
 
@@ -276,7 +317,7 @@
             orientation:'horizontal'
             Label:
                 id: temperatureSlider
-                text:'temperature: ' + str(temperature.value) + ' *C'
+                text:'temperature: ' + str(temperature.value) + ' \xb0CC'
             Slider
                 id: temperature
                 step:1
@@ -285,73 +326,160 @@
 
 
                 ######### TimePoint2#############
+
+
+
         Label:
-            text: 'Time point 2'  
+            size_hint: 1,0.5
+            text: 'Time point 2'
+        CheckBox:
 
+            id: timePoint2Active
         BoxLayout:
-          
-            orientation:'horizontal'     
-    
-            # Label:
-            #     id: timeSlider2
-            #     text:'timepoint 1 + ' + str(time2.value) + 'minutes'
-            # Slider:
-            #     id: time2
-            #     step: 5
-            #     range: (0,360)
-
-            Label:
-                text: ' starting in T1 +' 
-            Label:
-                markup: True
-                text: str(root.selectedHours2) + ' hours'
+            orientation:'horizontal'        
+            id: timePoint2Panel
+            disabled: (root.ids.timePoint2Active.active == False)
 
             BoxLayout:                          ###### INCREASE DECREASE TIME HOURS ######
-                orientation:'vertical'
+                orientation:'horizontal'
+                size_hint:2,1
+                padding: 5,10
                 GeneralButton
-                    size_hint : 0.2,1
+                    size_hint : 1,1
+                    text: '++'
+                    on_press: root.increaseTimeHoursFive2()
+                GeneralButton
+                    size_hint : 1,1
                     text: '+'
                     on_press: root.increaseTimeHours2()
+                Label:
+                    markup: True
+                    text: str(root.selectedHours2) + ' hours'
                 GeneralButton        
-                    size_hint : 0.2,1
+                    size_hint : 1,1
                     text: '-'
                     on_press: root.decreaseTimeHours2()
+                GeneralButton        
+                    size_hint : 1,1
+                    text: '--'
+                    on_press: root.decreaseTimeHoursFive2()
 
-            Label:
-                text:  str(root.selectedMinutes2) +' minutes'
+
+            
             
             BoxLayout:                          ###### INCREASE DECREASE TIME Minutes ######
-                orientation:'vertical'
-                
+                orientation:'horizontal'
+                padding: 5,10
                 GeneralButton
-                    size_hint : 0.2,1
+                    size_hint : 1,1
                     text: '+'
                     on_press: root.increaseTimeMinute2()
+                Label:
+                    text:  str(root.selectedMinutes2) +' minutes'
                 GeneralButton        
-                    size_hint : 0.2,1
+                    size_hint : 1,1
                     text: '-'
                     on_press: root.decreaseTimeMinute2()
 
             Label:
-                id: timeofday
-             #   text:   'at  '+ str(app.displayedTimeDelta1)
+                size_hint: 0.5,1
+                id: timeofday2
+                text:   'at  '+ str(root.displayedTimeDelta2)
+
+        BoxLayout:
+            orientation:'horizontal'
+            id: timePoint2Slider
+            disabled: (root.ids.timePoint2Active.active == False)
+            Label:
+                id: temperatureSlider2
+                text:'temperature: ' + str(temperature2.value) + ' \xb0C'
+            Slider
+                id: temperature2
+                step:1
+                range: (5,40)
+
+            #####EXP2############
+
+
+
+
+
+
+
+                
+        # Label:
+        #     text: 'Time point 2'  
+
+        # # BoxLayout:
+          
+        # #     orientation:'horizontal'     
+    
+        #     # Label:
+        #     #     id: timeSlider2
+        #     #     text:'timepoint 1 + ' + str(time2.value) + 'minutes'
+        #     # Slider:
+        #     #     id: time2
+        #     #     step: 5
+        #     #     range: (0,360)
+
+        #     # Label:
+        #     #     text: ' starting in T1 +' 
+        #     Label:
+        #         markup: True
+        #         text: str(root.selectedHours2) + ' hours'
+
+        #     BoxLayout:                          ###### INCREASE DECREASE TIME HOURS ######
+        #         orientation:'vertical'
+        #         GeneralButton
+        #             size_hint : 0.2,1
+        #             text: '+'
+        #             on_press: root.increaseTimeHours2()
+        #         GeneralButton        
+        #             size_hint : 0.2,1
+        #             text: '-'
+        #             on_press: root.decreaseTimeHours2()
+
+        #     Label:
+        #         text:  str(root.selectedMinutes2) +' minutes'
+            
+        #     BoxLayout:                          ###### INCREASE DECREASE TIME Minutes ######
+        #         orientation:'vertical'
+                
+        #         GeneralButton
+        #             size_hint : 0.2,1
+        #             text: '+'
+        #             on_press: root.increaseTimeMinute2()
+        #         GeneralButton        
+        #             size_hint : 0.2,1
+        #             text: '-'
+        #             on_press: root.decreaseTimeMinute2()
+
+        #     Label:
+        #         id: timeofday2
+        #         text:   'at  '+ str(root.displayedTimeDelta2)
 
 
        
+        # BoxLayout:
+        #     orientation:'horizontal'
+        #     Label:
+        #         id: temperatureSlider2
+        #         text:'temperature: ' + str(temperature2.value) + ' \xb0C'
+        #     Slider
+        #         id: temperature2
+        #         step: 5
+        #         range: (5,40)
+        #         value: 28        
+##########################################
         BoxLayout:
             orientation:'horizontal'
-            Label:
-                id: temperatureSlider2
-                text:'temperature: ' + str(temperature2.value) + ' *C'
-            Slider
-                id: temperature2
-                step: 5
-                range: (5,40)
-                value: 28        
-##########################################
-        Button:
-            text: 'Submit'
-            on_press: root.closePopup()
+            Button:
+                text: 'Submit'
+                on_press: root.submitPopup()
+            Button:
+                text: 'Cancel'
+                on_press: root.closePopup()
+
 
 
 
