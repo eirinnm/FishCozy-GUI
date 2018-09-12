@@ -125,8 +125,10 @@ class Toggle1(ToggleButton):
        #### Timer Updater #####
 
         if (self.seconds < self.setTime*60):
-            self.lapsedTime = round((self.setTime*60 - self.seconds)/60,2)
-            self.lapsedTime2 = round((self.setTime2*60 - self.seconds)/60,2)
+           # self.lapsedTime = round((self.setTime*60 - self.seconds)/60,2)
+            self.lapsedTime = self.setTime*60 - self.seconds
+            #self.lapsedTime2 = round((self.setTime2*60 - self.seconds)/60,2)
+            self.lapsedTime2 = self.setTime2*60 - self.seconds
             
             self.targetTemperature = 28
 
@@ -427,7 +429,7 @@ class MyPopup (Popup):
             
             #print(chamber)
             chamber.setpoint = toggle.targetTemperature
-            print(toggle.targetTemperature)
+           # print(toggle.targetTemperature)
             
             
         

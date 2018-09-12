@@ -144,7 +144,7 @@
         #     id: lapsedTime
         #     center: 
         #         (root.center_x+(self.width/2*root.labelOffsetX))  +((root.height/2-10)*math.cos(math.radians(-root.currentTimeAngle+90))), ((root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.currentTimeAngle+90))+(20*root.labelOffsetY)))
-        #     text: 'lapsing minutes:' + str(root.lapsedTime)
+        #     text: f'lapsing minutes: ({root.lapsedTime//60})'
 
 
         RelativeLayout:
@@ -163,7 +163,8 @@
                 markup: True       
                 font_size: root.height/15 
                 pos: 0,-root.height/10
-                text: str(root.setTemperature) + '\xb0C, in ' + str(root.lapsedTime) + 'min'
+                text: str(root.setTemperature) + '\xb0C, in ' + str(root.lapsedTime//60) + 'm' + str(root.lapsedTime%60) + 's'
+                        
             Label:
                 id: labelTime2            
                 disabled:False
@@ -171,7 +172,7 @@
                 markup: True       
                 font_size: root.height/15 
                 pos: 0,-root.height/5
-                text: str(root.setTemperature2) + '\xb0C, in ' + str(root.lapsedTime2) + 'min'
+                text: str(root.setTemperature2) + '\xb0C, in ' + str(root.lapsedTime2//60) + 'm' + str(root.lapsedTime2%60) + 's'
 
 
 
