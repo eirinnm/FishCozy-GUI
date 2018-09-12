@@ -20,6 +20,7 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.slider import Slider
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.switch import Switch
+from kivy.uix.effectwidget import EffectBase 
 
 from FishCozyHAL import FishCozyHAL
 
@@ -38,7 +39,6 @@ if platform.system() == 'Linux':
     pass
 else:
     Window.size = (800, 480)
-
 
 
 
@@ -62,15 +62,16 @@ class Toggle1(ToggleButton):
 
     currentPower = NumericProperty(0)
     
-    setTemperature = NumericProperty(20)
+    setTemperature = NumericProperty(28)
     setTime = NumericProperty(5)
     setTimeAngle = NumericProperty()
 
-    setTemperature2 = NumericProperty(30)
+    setTemperature2 = NumericProperty(28)
     setTime2 = NumericProperty(5)
     setTimeAngle2 = NumericProperty()
  
     lapsedTime = NumericProperty()
+    lapsedTime2 = NumericProperty()
 
     labelOffsetY =  -1
     labelOffsetX = -1
@@ -81,6 +82,9 @@ class Toggle1(ToggleButton):
 
     startingTime =.0
 
+    targetTemperature = 28
+
+    isTimePoint2On = False
 
 
 
@@ -94,7 +98,8 @@ class Toggle1(ToggleButton):
         self.ids.running.text = 'running'
         self.startingTime = time.clock()
        # print(self.startingTime)
-
+        self.tickmarckColor1 =  ([51/255, 164/255, 208/255, 1])
+        self.tickmarckColor2 =  ([51/255, 164/255, 208/255, 0])
 
 
     def updateTime(self):
@@ -102,15 +107,10 @@ class Toggle1(ToggleButton):
 
 
         if self.running:
-      
 
-        
             
             self.seconds = round(time.clock() - self.startingTime)
-            
-       # self.text = str(self.seconds)        ####### string in the center of each toggle
 
-        # self.currentTimeAngle  = (self.seconds%60)*6
         self.currentTimeAngle  = (310/self.setTime2/360)* self.seconds
         self.setTimeAngle = (self.setTime/self.setTime2)*310
        # self.setTimeAngle2 = (self.setTime+self.setTime2)/285 * self.setTime2
@@ -118,7 +118,7 @@ class Toggle1(ToggleButton):
         
         
 
-        print(self.setTime)
+      #  print(self.setTime)
 
         
  
@@ -126,27 +126,48 @@ class Toggle1(ToggleButton):
 
         if (self.seconds < self.setTime*60):
             self.lapsedTime = round((self.setTime*60 - self.seconds)/60,2)
+            self.lapsedTime2 = round((self.setTime2*60 - self.seconds)/60,2)
             
+            self.targetTemperature = 28
 
-        if (self.seconds > self.setTime*60):
-            self.lapsedTime = round((self.setTime2*60 - self.seconds)/60)
-            self.tickmarckColor1 = ([60/255, 60/255, 60/255, 1])
+            if (self.seconds > self.setTime*60):
+                self.lapsedTime = round((self.setTime2*60 - self.seconds)/60)
+                self.tickmarckColor1 = ([60/255, 60/255, 60/255, 1])
 
-        if (self.seconds > self.setTime2*60):
-            self.tickmarckColor2 = ([60/255, 60/255, 60/255, 1])
+                self.targetTemperature = self.setTemperature
+
+            if (self.isTimePoint2On == False):
+                self.tickmarckColor2 = ([51/255, 164/255, 208/255, 0])
+                self.ids.onTimePoint2.disabled = True    
+                self.setTimeAngle = 310
+                self.ids.labelTime2.text = ''
+
+
+            if (self.isTimePoint2On == True):
+                
+
+                self.tickmarckColor2 = ([51/255, 164/255, 208/255, 1])
+                self.ids.onTimePoint2.disabled = False
+                
+
+            if (self.seconds > self.setTime2*60):
+                self.tickmarckColor2 = ([60/255, 60/255, 60/255, 1])
+
+                self.targetTemperature = self.setTemperature2
+            
     
-        if ((self.seconds + 15)//30)%2 !=  0:
-            self.labelOffsetY = 1
-        if   ((self.seconds+15)//30)%2 ==  0:
-            self.labelOffsetY = -1
+        # if ((self.seconds + 15)//30)%2 !=  0:
+        #     self.labelOffsetY = 1
+        # if   ((self.seconds+15)//30)%2 ==  0:
+        #     self.labelOffsetY = -1
 
-        if ((self.seconds )//30)%2 !=  0:
-            self.labelOffsetX = 1
+        # if ((self.seconds )//30)%2 !=  0:
+        #     self.labelOffsetX = 1
            
-        if   ((self.seconds)//30)%2 ==  0:
-            self.labelOffsetX = -1
+        # if   ((self.seconds)//30)%2 ==  0:
+        #     self.labelOffsetX = -1
   
-
+       # print (MyPopup().ids.timePoint2Active.active)
 
 
 
@@ -268,6 +289,7 @@ class MyPopup (Popup):
 
 
     displayedTimeDelta1 =StringProperty()
+    displayedTimeDelta2 =StringProperty()
 
     selectedTemperature1 = NumericProperty()
     selectedTemperature2 = NumericProperty()
@@ -279,6 +301,9 @@ class MyPopup (Popup):
     selectedHours2 = NumericProperty()
 
     tempsetTime = NumericProperty()
+    
+    
+
     def __init__ (self, **kwargs):
         Popup.__init__(self,**kwargs)
         
@@ -294,57 +319,96 @@ class MyPopup (Popup):
                 self.ids.temperature2.value = toggle.setTemperature2
                 self.selectedHours2 = self.tempSetTime2//60 
                 self.selectedMinutes2 = self.tempSetTime2%60 
-         
-               # print('setTimeRetrieved' , (toggle.setTime2))
 
-                ### MAKE THIS UPDATABLE!!!!!!!####
-
-                    
-            
-
+                self.ids.timePoint2Active.active = toggle.isTimePoint2On
 
 
     def increaseTimeHours(self):
             self.selectedHours1 +=1
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+            
+      
     def decreaseTimeHours(self):
-        if self.selectedHours1>0 :     
-            self.selectedHours1 -=1
+        if self.selectedHours1>0 :
+            self.selectedHours1 -=1     
+            self.updateClockTime(self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+
+
+
+    def increaseTimeHoursFive(self):
+            self.selectedHours1 +=5
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+            
+      
+    def decreaseTimeHoursFive(self):
+        if self.selectedHours1>=5 :
+            self.selectedHours1 -=5     
+            self.updateClockTime(self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+      
       
 
     def increaseTimeMinute(self):
         if self.selectedMinutes1 < 55:
             self. selectedMinutes1 += 5
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+
     def decreaseTimeMinute(self):
         if self.selectedMinutes1>0 :
-            self.selectedMinutes1 -= 5
+            self. selectedMinutes1 -= 5
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
       
 
     def increaseTimeHours2(self):
             self.selectedHours2 +=1
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+
     def decreaseTimeHours2(self):
-        if self.selectedHours2>0 :     
+        if self.selectedHours2>0 : 
             self.selectedHours2 -=1
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+
+    def increaseTimeHoursFive2(self):
+            self.selectedHours2 +=5
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+
+    def decreaseTimeHoursFive2(self):
+        if self.selectedHours2>=5 : 
+            self.selectedHours2 -=5
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
       
 
     def increaseTimeMinute2(self):
         if self.selectedMinutes2 < 55:
             self. selectedMinutes2 += 5
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
     def decreaseTimeMinute2(self):
         if self.selectedMinutes2>0 :
             self.selectedMinutes2 -= 5
-      
-    def updateTimer(self):
-        tempTime = datetime.datetime.now() + datetime.timedelta(minutes=toggle.setTime)
-        self.displayedTimeDelta1 = tempTime.strftime( "%H:%M:%S")
+            self.updateClockTime (self.selectedHours1,self.selectedMinutes1,self.selectedHours2,self.selectedMinutes2)
+
+
+
+    def updateClockTime(self,hoursToAdd,minutesToAdd,hoursToAdd2,minutesToAdd2):
+
+        self.hoursToAdd =0
+        self.minutesToAdd = 0
+        self.hoursToAdd2 =0
+        self.minutesToAdd2 = 0
+
+        self.tempTime = datetime.datetime.now() + datetime.timedelta(hours = hoursToAdd, minutes=minutesToAdd)
+        self.displayedTimeDelta1 = self.tempTime.strftime( "%H:%M")
+        self.tempTime2 = self.tempTime +  datetime.timedelta(hours = hoursToAdd2, minutes=minutesToAdd2)
+        self.displayedTimeDelta2 = self.tempTime2.strftime( "%H:%M")
 
 
 
 
-    def closePopup(self):
+    def submitPopup(self):
 
         self.selectedTemperature1 = self.ids.temperature.value
        
-        self.selectedTemperature2 = self.ids.temperature2.value
+        self.selectedTemperature2 = self.ids.temperature2.value#
+    
 
         for toggle in app.toggles:
             if toggle.toggled:
@@ -354,15 +418,22 @@ class MyPopup (Popup):
 
                 toggle.setTemperature2 = self.selectedTemperature2
                 toggle.setTime2 = toggle.setTime + self.selectedMinutes2 + (self.selectedHours2*60)
+
+                toggle.isTimePoint2On = self.ids.timePoint2Active.active
             
            # print(toggle.setTime2)
 
         for toggle, chamber in zip (app.toggles, app.board.chambers):
+            
             #print(chamber)
-            chamber.setpoint = toggle.setTemperature
+            chamber.setpoint = toggle.targetTemperature
+            print(toggle.targetTemperature)
             
             
         
+        self.dismiss()
+
+    def closePopup(self):
         self.dismiss()
 
 
@@ -427,7 +498,7 @@ class ScreenwidgetApp(App):
 
         for toggle, chamber in zip (app.toggles, app.board.chambers):
 
-            chamber.setpoint = toggle.setTemperature
+            chamber.setpoint = toggle.targetTemperature
 
             toggle.currentPower = chamber.power/255
           
@@ -436,8 +507,7 @@ class ScreenwidgetApp(App):
             else:
                 toggle.newColor = ([255/255, 159/255, 54/255,1])
 
-            toggle.ids.currentTemp.text = str(round(chamber.temperature,1)) + '[sup] °C [/sup]'
-
+            toggle.ids.currentTemp.text = str(round(chamber.temperature,1)) + '[sup]/' + str(toggle.targetTemperature) + '°C [/sup]'
 
 
     def build(self):
