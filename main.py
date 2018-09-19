@@ -3,6 +3,8 @@ import datetime
 import time
 import sys
 import kivy
+import cozyLogger
+
 kivy.require('1.9.0')
 
 from kivy.app import App
@@ -25,7 +27,7 @@ from kivy.uix.effectwidget import EffectBase
 from FishCozyHAL import FishCozyHAL
 
 if len(sys.argv) < 2:
-    print("Usage: main.py serial_port\nSerial_port can be 'auto', or 'false' for a simulation")
+    print("Usage: main.py serial_port\nSerial_port can be 'auto', or 'false' for a simulation _ add 'log' to activate CozyLogger")
     sys.exit()
 port = sys.argv[1]
 if port == 'auto':
@@ -33,12 +35,21 @@ if port == 'auto':
 if port == 'false':
     port = False
 
+LOG_ON = False
+
+if len(sys.argv)==3 and (sys.argv[2]=='log'):
+    LOG_ON = True
+if len(sys.argv) ==3 and (sys.argv[2] != 'log'):
+    print ("Value not valid: use 'log' to activate CozyLogger or leave empty. If unintrested in CozyLogger what are you even trying to do?  ")
+    LOG_ON = False
 import platform
 if platform.system() == 'Linux':
     #Window.fullscreen = True #seems to crash now and not necessary anyway
     pass
 else:
     Window.size = (800, 480)
+
+
 
 
 
@@ -107,16 +118,17 @@ class Toggle1(ToggleButton):
 
 
         if self.running:
-
-            
             self.seconds = round(time.clock() - self.startingTime)
 
-        self.currentTimeAngle  = (310/self.setTime2/360)* self.seconds
-        self.setTimeAngle = (self.setTime/self.setTime2)*310
-       # self.setTimeAngle2 = (self.setTime+self.setTime2)/285 * self.setTime2
+        if self.setTime2 == 0:
+            self.currentTimeAngle = 0
+            self.targetTemperature = self.setTemperature
+        else:
+            self.currentTimeAngle  = ((310/self.setTime2)/60)* self.seconds
+            self.setTimeAngle = (self.setTime/self.setTime2)*310
+     
 
-        
-        
+
 
       #  print(self.setTime)
 
@@ -124,7 +136,7 @@ class Toggle1(ToggleButton):
  
        #### Timer Updater #####
 
-        if (self.seconds < self.setTime*60):
+        if (self.seconds <= self.setTime*60):
            # self.lapsedTime = round((self.setTime*60 - self.seconds)/60,2)
             self.lapsedTime = self.setTime*60 - self.seconds
             #self.lapsedTime2 = round((self.setTime2*60 - self.seconds)/60,2)
@@ -132,30 +144,40 @@ class Toggle1(ToggleButton):
             
             self.targetTemperature = 28
 
+        if (self.seconds > self.setTime*60):
+            self.lapsedTime2 = self.setTime2*60 - self.seconds
+            #self.lapsedTime = round((self.setTime2*60 - self.seconds)/60)
+            self.tickmarckColor1 = ([60/255, 60/255, 60/255, 1])
+            self.ids.labelTime1.text= ''
+
+            self.targetTemperature = self.setTemperature
+
+        if (self.isTimePoint2On == False):
+            self.tickmarckColor2 = ([51/255, 164/255, 208/255, 0])
+            self.ids.onTimePoint2.disabled = True    
+            self.setTimeAngle = 310
+            self.ids.labelTime2.text = ''
+            
             if (self.seconds > self.setTime*60):
-                self.lapsedTime = round((self.setTime2*60 - self.seconds)/60)
+               
                 self.tickmarckColor1 = ([60/255, 60/255, 60/255, 1])
+                self.ids.labelTime1.text= 'Protocol Completed'
 
                 self.targetTemperature = self.setTemperature
 
-            if (self.isTimePoint2On == False):
-                self.tickmarckColor2 = ([51/255, 164/255, 208/255, 0])
-                self.ids.onTimePoint2.disabled = True    
-                self.setTimeAngle = 310
-                self.ids.labelTime2.text = ''
 
 
-            if (self.isTimePoint2On == True):
-                
+        if (self.isTimePoint2On == True):
+            self.tickmarckColor2 = ([51/255, 164/255, 208/255, 1])
+            self.ids.onTimePoint2.disabled = False
 
-                self.tickmarckColor2 = ([51/255, 164/255, 208/255, 1])
-                self.ids.onTimePoint2.disabled = False
-                
-
-            if (self.seconds > self.setTime2*60):
+            if (self.seconds >= self.setTime2*60):
                 self.tickmarckColor2 = ([60/255, 60/255, 60/255, 1])
-
+                self.lapsedTime2 = 0
                 self.targetTemperature = self.setTemperature2
+                self.ids.labelTime2.text = 'Protocol Completed'
+            
+
             
     
         # if ((self.seconds + 15)//30)%2 !=  0:
@@ -489,13 +511,12 @@ class ScreenwidgetApp(App):
         app.root.ids.currentTimeLabel.text = self.currentDate
         
         
-
+        #print (self.time)
         
 
         for toggle in self.toggles:
             toggle.updateTime()
 
-    #    print(self.board.chambers)
         
 
         for toggle, chamber in zip (app.toggles, app.board.chambers):
@@ -511,11 +532,14 @@ class ScreenwidgetApp(App):
 
             toggle.ids.currentTemp.text = str(round(chamber.temperature,1)) + '[sup]/' + str(toggle.targetTemperature) + '°C [/sup]'
 
+        ###logger###
+        if LOG_ON:
+            self.logger.logWriter(app.board.chambers)
 
     def build(self):
 
-
-
+    
+        self.logger = cozyLogger.CozyLogger(5)          ### 5 is refresh rate (argument of ojb init)
         
 
         ############## CONNECT TO BOARD ###################
@@ -564,3 +588,5 @@ if __name__ == '__main__':
     app.run()
     
 #    print(app.root.ids)
+
+

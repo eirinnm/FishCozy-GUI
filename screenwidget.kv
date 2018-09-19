@@ -23,6 +23,7 @@
 #             circle:
 #                 (self.center_x, self.center_y, min(self.height, self.height)/ 2.3 ,0 ,(root.currentTimeAngle))
         
+   
 
 <Toggle1@ToggleButton>:
 
@@ -30,7 +31,6 @@
     size_hint: (1,1)
     background_color: (0.5,0.5,0.5,0.5)
     on_release: self.startStop()
-
 
     canvas:
 
@@ -53,7 +53,7 @@
             circle:
                 (self.center_x, self.center_y, min(self.height, self.height)/ 2.1,-40,-50)
         
-        
+    
         Color:
             rgba: 0.5, 0.5, 0.5, 1
         Line:
@@ -87,13 +87,13 @@
                                
             id: timePoint1
             size: 20,20
-            pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-self.setTimeAngle+90)))                    
+            pos: (root.center_x-10) + ((root.height/2-5)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y-10) + ((root.height/2-5)*math.sin(math.radians(-self.setTimeAngle+90)))                    
         Color:
             rgba: self.tickmarckColor2
         Ellipse:           
             id: timePoint2
             size: 20,20
-            pos: (root.center_x-10) + ((root.height/2-10)*math.cos(math.radians(-310+90))), (root.center_y-10) + ((root.height/2-10)*math.sin(math.radians(-310+90)))                                                    
+            pos: (root.center_x-10) + ((root.height/2-5)*math.cos(math.radians(-310+90))), (root.center_y-10) + ((root.height/2-5)*math.sin(math.radians(-310+90)))                                                    
         
 
         Color:
@@ -116,7 +116,7 @@
         disabled: True
         markup: True
         center: 
-            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-310+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-310+90)))
+            (root.center_x) + ((root.height/2-5)*math.cos(math.radians(-310+90))), (root.center_y) + ((root.height/2-5)*math.sin(math.radians(-310+90)))
         text:'T2'# str(root.setTemperature2)
             
 
@@ -133,7 +133,7 @@
         
         markup: True
         center: 
-            (root.center_x) + ((root.height/2-10)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y) + ((root.height/2-10)*math.sin(math.radians(-root.setTimeAngle+90)))
+            (root.center_x) + ((root.height/2-5)*math.cos(math.radians(-root.setTimeAngle+90))), (root.center_y) + ((root.height/2-5)*math.sin(math.radians(-root.setTimeAngle+90)))
         text: 'T1'#str(root.setTemperature)
             
 
@@ -163,7 +163,7 @@
                 markup: True       
                 font_size: root.height/15 
                 pos: 0,-root.height/10
-                text: str(root.setTemperature) + '\xb0C, in ' + str(root.lapsedTime//60) + 'm' + str(root.lapsedTime%60) + 's'
+                text: str(root.setTemperature) + '\xb0C, in ' + str(root.lapsedTime//(60*60)) +'h' + str(root.lapsedTime%(60*60)//60) + 'm' + str(root.lapsedTime%60) + 's'
                         
             Label:
                 id: labelTime2            
@@ -172,7 +172,7 @@
                 markup: True       
                 font_size: root.height/15 
                 pos: 0,-root.height/5
-                text: str(root.setTemperature2) + '\xb0C, in ' + str(root.lapsedTime2//60) + 'm' + str(root.lapsedTime2%60) + 's'
+                text: str(root.setTemperature2) + '\xb0C, in ' + str(root.lapsedTime2//(60*60)) +'h' + str(root.lapsedTime2%(60*60)//60) + 'm' + str(root.lapsedTime2%60) + 's'
 
 
 
