@@ -26,6 +26,8 @@ from kivy.uix.effectwidget import EffectBase
 
 from FishCozyHAL import FishCozyHAL
 
+
+
 if len(sys.argv) < 2:
     print("Usage: main.py serial_port\nSerial_port can be 'auto', or 'false' for a simulation _ add 'log' to activate CozyLogger")
     sys.exit()
@@ -39,8 +41,9 @@ LOG_ON = False
 
 if len(sys.argv)==3 and (sys.argv[2]=='log'):
     LOG_ON = True
+    
 if len(sys.argv) ==3 and (sys.argv[2] != 'log'):
-    print ("Value not valid: use 'log' to activate CozyLogger or leave empty. If unintrested in CozyLogger what are you even trying to do?  ")
+    print ("Value not valid: use 'log' to activate CozyLogger or leave empty. What were you looking for anyway?")
     LOG_ON = False
 import platform
 if platform.system() == 'Linux':
@@ -50,7 +53,7 @@ else:
     Window.size = (800, 480)
 
 
-
+print(sys.argv)
 
 
 
@@ -532,14 +535,14 @@ class ScreenwidgetApp(App):
 
             toggle.ids.currentTemp.text = str(round(chamber.temperature,1)) + '[sup]/' + str(toggle.targetTemperature) + '°C [/sup]'
 
-        ###logger###
-        if LOG_ON:
+        
+        if LOG_ON:                                      # Logger is On
             self.logger.logWriter(app.board.chambers)
 
     def build(self):
 
     
-        self.logger = cozyLogger.CozyLogger(5)          ### 5 is refresh rate (argument of ojb init)
+        self.logger = cozyLogger.CozyLogger(1)          ### 5 is refresh rate (argument of ojb init)
         
 
         ############## CONNECT TO BOARD ###################
