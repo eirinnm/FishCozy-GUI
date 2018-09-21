@@ -25,7 +25,7 @@ class CozyLogger:
             
             self.timeZero= int(time.time())
 
-            print('Logging...')
+          #  print('Logging...')
 
 
 # ########################### EXAMPLE FOR ME ####################

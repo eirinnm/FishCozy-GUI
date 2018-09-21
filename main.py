@@ -542,7 +542,7 @@ class ScreenwidgetApp(App):
     def build(self):
 
     
-        self.logger = cozyLogger.CozyLogger(1)          ### 5 is refresh rate (argument of ojb init)
+        self.logger = cozyLogger.CozyLogger(5)          ### 5 is refresh rate (argument of ojb init)
         
 
         ############## CONNECT TO BOARD ###################
