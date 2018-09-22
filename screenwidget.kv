@@ -183,13 +183,15 @@
             
 
 <Starter@ToggleButton>:
-    
+    background_color: 1,1,1,0.5
     id: starterToggle
     text: self.text
     on_release: self.toggleValue()
 
 <Edit@TButton>:
+    background_color: 1,1,1,0.5
     disabled: True
+
     
     text: 'Edit Protocol'
     on_press: self.toggleValue()
@@ -197,7 +199,7 @@
 
 
 <GeneralButton@Button>:
-
+    
 
 
 <MyPopup@Popup>:
@@ -552,8 +554,9 @@
             Label:
                 id:currentTimeLabel
             GeneralButton:
-     
+
                 markup: True 
                 size_hint: .2,1
+                background_color: 1,1,1,0.5
                 text: '[b]?[/b]'
                 on_press: self.onQuestionAsked()
