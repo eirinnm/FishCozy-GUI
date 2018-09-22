@@ -4,7 +4,6 @@ import time, datetime
 
 
 class CozyLogger:
-
     
     def __init__(self,refreshRateSeconds=5):
         self.timeZero = int(time.time())
@@ -27,7 +26,6 @@ class CozyLogger:
 
           #  print('Logging...')
 
-
 # ########################### EXAMPLE FOR ME ####################
 #             import pandas as pd
 
@@ -38,3 +36,4 @@ class CozyLogger:
 #             df['NewColumn'] = new_column
 #             # save the dataframe to CSV
 #             df.to_csv('path/to/file.csv', sep='\t')
+

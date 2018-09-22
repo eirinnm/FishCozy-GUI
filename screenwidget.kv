@@ -502,6 +502,14 @@
 
 <RootWidget>:
 
+    canvas.before:
+        Color:
+            rgb: 1,1,1
+        Rectangle:
+            pos:((self.right - self.width + 2.0),(self.top - self.height + 2.0))
+            size: self.size
+            source: 'background.jpg'
+
     BoxLayout:
     
         orientation:"vertical"
@@ -544,6 +552,7 @@
             Label:
                 id:currentTimeLabel
             GeneralButton:
+     
                 markup: True 
                 size_hint: .2,1
                 text: '[b]?[/b]'
