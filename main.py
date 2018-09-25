@@ -110,7 +110,7 @@ class Toggle1(ToggleButton):
         self.running = True
         self.ids.running.disabled = False
         self.ids.running.text = 'running'
-        self.startingTime = time.clock()
+        self.startingTime = time.time()
        # print(self.startingTime)
         self.tickmarckColor1 =  ([51/255, 164/255, 208/255, 1])
         self.tickmarckColor2 =  ([51/255, 164/255, 208/255, 0])
@@ -121,7 +121,7 @@ class Toggle1(ToggleButton):
 
 
         if self.running:
-            self.seconds = round(time.clock() - self.startingTime)
+            self.seconds = round(time.time() - self.startingTime)
 
         if self.setTime2 == 0:
             self.currentTimeAngle = 0
