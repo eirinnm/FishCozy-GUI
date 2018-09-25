@@ -490,12 +490,17 @@
     auto_bring_to_front: True
     size_hint: .8, .5
     auto_dismiss: True
-    title: 'Questions?'
-    
-    Label:
-        id:secondPopUp
-        markup: True 
-        text:'We Do Not Have Any [b]Answers[/b] Either. Try With [b]42[/b].'
+    title: 'Questions?'#
+
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id:secondPopUp
+            markup: True 
+            text:'We Do Not Have Any [b]Answers[/b] Either. Try With [b]42[/b].'
+        Button:
+            text:'Turn Off FishCozy: You Sure?'
+            on_release: app.stop()
 
 
 <StarterSwitch@Switch>:
