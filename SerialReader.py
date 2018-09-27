@@ -21,24 +21,22 @@ timeZero= int(time.time())
 refreshRateSeconds = 5
 date = str(datetime.datetime.fromtimestamp(timeZero).strftime('%Y%m%d_%H%M'))
 print(date)
-with open (date+'.csv','w') as csv_file:
-
-    fieldnames = ['time','temperature']
+#fieldnames = ['time','temperature']
     #writer = csv.DictWriter(csv_file, fieldnames=fieldnames,delimiter='\t')
     #writer.writeheader()
     
-    while True:
-
-        arduinoRead = arduino.readline().decode().strip()
-
-        timeOne = int(time.time())
-        if(timeOne - timeZero == refreshRateSeconds):
-            timeZero= int(time.time())
+while True:
+    timeOne = int(time.time())
+    arduinoRead = arduino.readline().decode().strip()
+        
+    if(timeOne - timeZero == refreshRateSeconds):
+        with open (date+'.csv','a') as csv_file:
             outline = str(timeZero)+ '\t' + str(arduinoRead)
             print(outline)
             csv_file.write(outline+'\n')
-            #writer.writerow({'time':str(timeZero),'temperature':str(arduinoRead)})
+                #writer.writerow({'time':str(timeZero),'temperature':str(arduinoRead)})
 
+        timeZero= int(time.time())
         ### ADD CLOCK ###
         ### SET RETRIEVE DATA EVERY T ###
         ### PRINT SERIAL DATA AND T-STAMP ###
