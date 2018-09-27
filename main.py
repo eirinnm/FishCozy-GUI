@@ -556,7 +556,7 @@ class ScreenwidgetApp(App):
         self.started=False
         
         self.time=0
-        Clock.schedule_interval(self.timer,.2) 
+        Clock.schedule_interval(self.timer,.1) 
         app = RootWidget()
 
         ###############    INPUTS            ###############
