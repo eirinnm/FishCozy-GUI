@@ -57,6 +57,20 @@ print(sys.argv)
 
 
 
+correctionValues = [(0.0206, -0.9599, 12.677),
+                    (0.0164, -0.8511, 12.096),
+                    (0.0003, +0.0563, 0.22),
+                    ( 0.0073 ,-0.209, + 2.7335),
+                    (0.0072,- 0.0429, - 0.557),
+                    ( 0.0076,- 0.0298, - 0.1939)]
+
+
+
+
+     
+
+
+
 class LineCircle(Widget):
     pass
 
@@ -67,6 +81,9 @@ class RootWidget(BoxLayout):
 
 
 class Toggle1(ToggleButton):
+
+    correctionValues=()
+
 
     newColor = ListProperty ([0,1,0,1])
 
@@ -213,8 +230,11 @@ class Toggle1(ToggleButton):
      #   if self.running== False:
       #      Starter.state !='down'
         ####a ADD REFRESH EDIT BUTTON
-   
-
+    
+    def BinomialCorrection(self,trueSetTemp):
+      
+        a,b,c=self.correctionValues
+        return trueSetTemp+(a*trueSetTemp**2 + b *trueSetTemp + c)
  
 
 class Starter (ToggleButton):
@@ -447,13 +467,16 @@ class MyPopup (Popup):
                 toggle.setTime2 = toggle.setTime + self.selectedMinutes2 + (self.selectedHours2*60)
 
                 toggle.isTimePoint2On = self.ids.timePoint2Active.active
+
+
             
            # print(toggle.setTime2)
 
         for toggle, chamber in zip (app.toggles, app.board.chambers):
             
             #print(chamber)
-            chamber.setpoint = toggle.targetTemperature
+            correctedTemp = toggle.BinomialCorrection(toggle.targetTemperature)
+            chamber.setpoint = correctedTemp
            # print(toggle.targetTemperature)
             
             
@@ -524,7 +547,8 @@ class ScreenwidgetApp(App):
 
         for toggle, chamber in zip (app.toggles, app.board.chambers):
 
-            chamber.setpoint = toggle.targetTemperature
+            correctedTemp = toggle.BinomialCorrection(toggle.targetTemperature)
+            chamber.setpoint = correctedTemp
 
             toggle.currentPower = chamber.power/255
           
@@ -571,8 +595,8 @@ class ScreenwidgetApp(App):
         app.ids.toggle5,
                     ]
 
-
-
+        for i, toggle in enumerate(self.toggles):
+            toggle.correctionValues = correctionValues[i]
 
 
         ####################################################
